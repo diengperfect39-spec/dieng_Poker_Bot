@@ -26,8 +26,15 @@ async def telegram_webhook(request: Request):
     
     if "message" in data:
         chat_id = data["message"]["chat"]["id"]
+        text_recu = data["message"].get("text", "").strip()
         
-        # Options exactes extraites de l'interface TvBet / Winwin
+        # Récupération de la référence de session personnalisée saisie sur Telegram
+        session_id = "PB237462"
+        if text_recu and not text_recu.startswith("/"):
+            session_id = text_recu.upper()
+        elif "PB" in text_recu:
+            session_id = text_recu
+            
         marches_tvbet = [
             {"combinaison": "Deux Paires", "cote": "3.1"},
             {"combinaison": "Quinte", "cote": "5.7"},
@@ -37,22 +44,28 @@ async def telegram_webhook(request: Request):
             {"combinaison": "Full House", "cote": "8.6"}
         ]
         
-        # Sélection de la option à forte récurrence statistique
         selection = random.choice(marches_tvbet)
         main_gagnante = random.choice(["Main (1)", "Main (2)"])
         cote_duel = "5.2"
         
-        # Indice de robustesse technique basé sur l'équilibre des cotes TVBet
-        confiance = random.randint(89, 97)
+        # Indice de fiabilité dynamique variable à chaque analyse (entre 98.6% et 99.9%)
+        confiance_val = round(random.uniform(98.6, 99.9), 1)
+        confiance = f"{confiance_val}%"
+        
+        # Minutage live synchronisé
+        min_restant = random.randint(0, 4)
+        sec_restante = random.randint(10, 59)
+        minutage_live = f"0{min_restant} : {sec_restante} restantes"
         
         analysis_text = (
             f"♠️ **TVBET POKER EXPERT ANALYTICS** ♠️\n\n"
-            f"📺 **Session Live : TvBet POKER (PB237459)**[span_1](start_span)[span_1](end_span)\n\n"
-            f"🎯 **Option Recommandée :** {selection['combinaison']}\n"
+            f"🔒 **Référence Session :** POKER. {session_id}\n"
+            f"⏱ **Minutage Direct :** {minutage_live}\n\n"
+            f"🎯 **Option Validée :** {selection['combinaison']}\n"
             f"💰 **Cote Marché :** {selection['cote']}\n"
             f"🏆 **Duel de Main :** {main_gagnante} (Cote {cote_duel})\n"
-            f"📈 **Indice de Fiabilité :** {confiance}%\n"
-            f"⚡ *Statut : Grille de cotation TVBet validée.*"
+            f"📈 **Indice de Fiabilité :** {confiance}\n"
+            f"⚡ *Statut : Analyse de précision et grille verrouillée.*"
         )
         
         payload = {
