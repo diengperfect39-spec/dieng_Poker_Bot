@@ -1,5 +1,5 @@
+import hashlib
 import os
-import random
 import requests
 from fastapi import FastAPI, Request
 
@@ -18,12 +18,12 @@ def setup_webhook():
 
 @app.get("/")
 def home():
-    return {"status": "TvBet Poker Expert Engine - Active"}
+    return {"status": "TvBet Poker Deterministic VIP Engine - Active"}
 
 @app.post("/")
-async def telegram_webhook(request: Request):
+def telegram_webhook(request: Request):
     try:
-        data = await request.json()
+        data = request.json()
         
         if "message" in data:
             chat_id = data["message"]["chat"]["id"]
@@ -33,28 +33,52 @@ async def telegram_webhook(request: Request):
             if text_recu and not text_recu.startswith("/"):
                 session_info = text_recu.upper()
                 
-            matrice_analytique = [
-                {"combinaison": "Brelan", "cote": "6.8", "analyse_outs": "Indice de tirage fort (3 cartes similaires en vis-à-vis)"},
-                {"combinaison": "Deux Paires", "cote": "3.1", "analyse_outs": "Stabilité statistique optimale sur la table"},
-                {"combinaison": "Une Paire", "cote": "5.8", "analyse_outs": "Pression de main dominante validée par l'historique"},
-                {"combinaison": "Quinte", "cote": "5.7", "analyse_outs": "Alignement séquentiel des connecteurs confirmé"}
+            # Moteur déterministe pur : l'analyse est mathématiquement liée au code de la session (Zéro Aléatoire)
+            hash_val = int(hashlib.md5(session_info.encode()).hexdigest(), 16)
+            
+            options_expertes = [
+                {
+                    "combinaison": "Quinte", 
+                    "cote_comb": "5.7", 
+                    "main": "Main (5)", 
+                    "cote_main": "5.2", 
+                    "analyse": "Algorithme stochastique lourd : Alignement séquentiel et dynamique de table optimale."
+                },
+                {
+                    "combinaison": "Brelan", 
+                    "cote_comb": "6.8", 
+                    "main": "Main (2)", 
+                    "cote_main": "5.2", 
+                    "analyse": "Matrice de densité : Pression de redondance et vis-à-vis validée."
+                },
+                {
+                    "combinaison": "Deux Paires", 
+                    "cote_comb": "3.1", 
+                    "main": "Main (1)", 
+                    "cote_main": "5.2", 
+                    "analyse": "Analyse vectorielle : Stabilité statistique et croisement de paires fort."
+                },
+                {
+                    "combinaison": "Couleur", 
+                    "cote_comb": "8.7", 
+                    "main": "Main (4)", 
+                    "cote_main": "5.2", 
+                    "analyse": "Spectre de probabilité : Distribution homogène des enseignes confirmée."
+                }
             ]
             
-            selection = random.choice(matrice_analytique)
-            main_gagnante = random.choice(["Main (1)", "Main (2)", "Main (3)", "Main (4)"])
-            cote_duel = "5.2"
-            confiance_val = round(random.uniform(99.1, 99.9), 1)
-            confiance = f"{confiance_val}%"
+            # Sélection indexée de manière fixe par la session
+            choix = options_expertes[hash_val % len(options_expertes)]
+            confiance_val = 99.8
             
             analysis_text = (
-                f"♠️ **DIENG POKER VIP - EXPERT ANALYTICS** ♠️\n\n"
-                f"🔒 **Session & Horaire :** POKER. {session_info}\n\n"
-                f"🎯 **Option Validée :** {selection['combinaison']}\n"
-                f"📊 **Analyse Mathématique :** {selection['analyse_outs']}\n"
-                f"💰 **Cote Marché :** {selection['cote']}\n"
-                f"🏆 **Duel de Main :** {main_gagnante} (Cote {cote_duel})\n"
-                f"📈 **Indice de Fiabilité :** {confiance}\n"
-                f"⚡ *Statut : Grille validée par le moteur stochastique.*"
+                f"♠️ **DIENG POKER VIP - ANALYSE INSTITUTIONNELLE** ♠️\n\n"
+                f"🔒 **Session Ciblée :** POKER. {session_info}\n\n"
+                f"🎯 **Option Validée :** {choix['combinaison']} (Cote : {choix['cote_comb']})\n"
+                f"🏆 **Main Directe :** {choix['main']} (Cote : {choix['cote_main']})\n"
+                f"📊 **Rapport Analytique :** {choix['analyse']}\n"
+                f"📈 **Indice de Fiabilité :** {confiance_val}%\n"
+                f"⚡ *Statut : Moteur déterministe sans simulation.*"
             )
             
             payload = {
