@@ -1,5 +1,6 @@
 import os
 import random
+import requests
 from fastapi import FastAPI, Request
 import telegram
 
@@ -8,11 +9,18 @@ app = FastAPI()
 TOKEN = "9204768032:AAGhyVmAdpbtJtk91-BLsCt7UHeZTPrEmGk"
 bot = telegram.Bot(token=TOKEN)
 
+# URL de ton service sur Render (mets la tienne ici sans les https:// au début)
+RENDER_URL = "dieng-poker-bot.onrender.com"
+
 @app.on_event("startup")
 async def startup_event():
-    # Récupère automatiquement l'URL de Render ou utilise ton URL
-    # Telegram s'enregistre tout seul proprement ici
-    pass
+    # Configuration automatique du webhook au démarrage du serveur
+    webhook_url = f"https://{RENDER_URL}/webhook-poker"
+    url = f"https://api.telegram.org/bot{TOKEN}/setWebhook?url={webhook_url}"
+    try:
+        requests.get(url)
+    except Exception as e:
+        print(f"Erreur webhook: {e}")
 
 def analyze_indian_poker():
     joueurs = ["Dieng VIP", "Alpha", "Moussa", "King 99", "Matrix", "Titan", "Casino Master", "Cyber Pro"]
