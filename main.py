@@ -18,7 +18,7 @@ def setup_webhook():
 
 @app.get("/")
 def home():
-    return {"status": "Bot Poker Active"}
+    return {"status": "TvBet Poker Bot Active"}
 
 @app.post("/")
 async def telegram_webhook(request: Request):
@@ -27,18 +27,33 @@ async def telegram_webhook(request: Request):
     if "message" in data:
         chat_id = data["message"]["chat"]["id"]
         
+        # Liste des joueurs et des combinaisons TvBet Poker avec leurs cotes
         joueurs = ["Dieng VIP", "Alpha", "Moussa", "King 99", "Matrix", "Titan", "Casino Master", "Cyber Pro"]
         j1, j2 = random.sample(joueurs, 2)
         
-        confiance = random.randint(84, 96)
-        issue = random.choice([f"Victoire nette de {j1}", f"Victoire serrée de {j2}", "Value / Partage technique"])
+        combinaisons_tvbet = [
+            {"nom": "Carte Haute / Paire Simple", "cote": "1.85"},
+            {"nom": "Deux Paires", "cote": "3.1"},[span_1](start_span)[span_1](end_span)
+            {"nom": "Brelan", "cote": "4.5"},
+            {"nom": "Quinte", "cote": "5.7"},[span_2](start_span)[span_2](end_span)
+            {"nom": "Couleur (Flush)", "cote": "8.5"},
+            {"nom": "Full", "cote": "12.0"},
+            {"nom": "Carré", "cote": "25.0"},
+            {"nom": "Quinte Flush Royale", "cote": "500.0"}[span_3](start_span)[span_3](end_span)
+        ]
+        
+        choix_combinaiso = random.choice(combinaisons_tvbet)
+        gagnant_main = random.choice([j1, j2])
+        confiance = random.randint(85, 98)
         
         analysis_text = (
-            f"♠️ **DIENG POKER ANALYTICS VIP** ♠️\n\n"
-            f"🎯 **IndianPoker : ({j1} vs {j2})**\n\n"
-            f"📊 **Indicateur de Tendance :** {issue}\n"
+            f"♠️ **TVBET POKER ANALYTICS VIP** ♠️\n\n"
+            f"📺 **TvBet POKER : ({j1} vs {j2})**\n\n"
+            f"🎯 **Option Recommandée :** {choix_combinaiso['nom']}\n"
+            f"💰 **Cote Estimée :** {choix_combinaiso['cote']}\n"
+            f"🏆 **Avantage Tactique :** {gagnant_main}\n"
             f"📈 **Niveau de Fiabilité :** {confiance}%\n"
-            f"⚡ *Statut : Analyse de confrontation directe validée.*"
+            f"⚡ *Statut : Analyse de pari direct validée.*"
         )
         
         payload = {
