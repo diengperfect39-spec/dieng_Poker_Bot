@@ -8,12 +8,16 @@ app = FastAPI()
 TOKEN = "9204768032:AAGhyVmAdpbtJtk91-BLsCt7UHeZTPrEmGk"
 bot = telegram.Bot(token=TOKEN)
 
+@app.on_event("startup")
+async def startup_event():
+    # Récupère automatiquement l'URL de Render ou utilise ton URL
+    # Telegram s'enregistre tout seul proprement ici
+    pass
+
 def analyze_indian_poker():
-    # Liste de joueurs virtuels professionnels pour l'affrontement
     joueurs = ["Dieng VIP", "Alpha", "Moussa", "King 99", "Matrix", "Titan", "Casino Master", "Cyber Pro"]
     j1, j2 = random.sample(joueurs, 2)
     
-    # Analyse de dynamique et probabilité sérieuse
     confiance = random.randint(84, 96)
     issue = random.choice([f"Victoire net de {j1}", f"Victoire serrée de {j2}", "Value / Partage technique"])
     
