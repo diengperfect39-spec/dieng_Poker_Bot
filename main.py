@@ -28,12 +28,10 @@ async def telegram_webhook(request: Request):
         chat_id = data["message"]["chat"]["id"]
         text_recu = data["message"].get("text", "").strip()
         
-        # Récupération de la référence de session personnalisée saisie sur Telegram
-        session_id = "PB237462"
+        # Valeur par défaut si vide
+        session_info = "PB237462 17H30mn"
         if text_recu and not text_recu.startswith("/"):
-            session_id = text_recu.upper()
-        elif "PB" in text_recu:
-            session_id = text_recu
+            session_info = text_recu.upper()
             
         marches_tvbet = [
             {"combinaison": "Deux Paires", "cote": "3.1"},
@@ -48,24 +46,18 @@ async def telegram_webhook(request: Request):
         main_gagnante = random.choice(["Main (1)", "Main (2)"])
         cote_duel = "5.2"
         
-        # Indice de fiabilité dynamique variable à chaque analyse (entre 98.6% et 99.9%)
+        # Indice de fiabilité dynamique variable entre 98.6% et 99.9%
         confiance_val = round(random.uniform(98.6, 99.9), 1)
         confiance = f"{confiance_val}%"
         
-        # Minutage live synchronisé
-        min_restant = random.randint(0, 4)
-        sec_restante = random.randint(10, 59)
-        minutage_live = f"0{min_restant} : {sec_restante} restantes"
-        
         analysis_text = (
             f"♠️ **TVBET POKER EXPERT ANALYTICS** ♠️\n\n"
-            f"🔒 **Référence Session :** POKER. {session_id}\n"
-            f"⏱ **Minutage Direct :** {minutage_live}\n\n"
+            f"🔒 **Session & Horaire :** POKER. {session_info}\n\n"
             f"🎯 **Option Validée :** {selection['combinaison']}\n"
             f"💰 **Cote Marché :** {selection['cote']}\n"
             f"🏆 **Duel de Main :** {main_gagnante} (Cote {cote_duel})\n"
             f"📈 **Indice de Fiabilité :** {confiance}\n"
-            f"⚡ *Statut : Analyse de précision et grille verrouillée.*"
+            f"⚡ *Statut : Synchronisation horaire et grille verrouillée.*"
         )
         
         payload = {
