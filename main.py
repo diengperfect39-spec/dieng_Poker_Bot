@@ -6,7 +6,15 @@ from fastapi import FastAPI, Request
 app = FastAPI()
 
 TOKEN = "9204768032:AAGhyVmAdpbtJtk91-BLsCt7UHeZTPrEmGk"
-TELEGRAM_API_URL = f"https://api.telegram.org/bot{TOKEN}"
+RENDER_URL = "dieng-poker-bot.onrender.com"  # Mets bien ton nom de domaine Render exact ici
+
+@app.on_event("startup")
+def setup_webhook():
+    try:
+        url = f"https://api.telegram.org/bot{TOKEN}/setWebhook?url=https://{RENDER_URL}/"
+        requests.get(url)
+    except Exception:
+        pass
 
 @app.get("/")
 def home():
@@ -18,14 +26,12 @@ async def telegram_webhook(request: Request):
     
     if "message" in data:
         chat_id = data["message"]["chat"]["id"]
-        text = data["message"].get("text", "")
         
-        # Répond à n'importe quel texte ou commande pour être sûr que ça s'affiche
         joueurs = ["Dieng VIP", "Alpha", "Moussa", "King 99", "Matrix", "Titan", "Casino Master", "Cyber Pro"]
         j1, j2 = random.sample(joueurs, 2)
         
         confiance = random.randint(84, 96)
-        issue = random.choice([f"Victoire net de {j1}", f"Victoire serrée de {j2}", "Value / Partage technique"])
+        issue = random.choice([f"Victoire net de je {j1}", f"Victoire serrée de {j2}", "Value / Partage technique"])
         
         analysis_text = (
             f"♠️ **DIENG POKER ANALYTICS VIP** ♠️\n\n"
@@ -40,6 +46,6 @@ async def telegram_webhook(request: Request):
             "text": analysis_text,
             "parse_mode": "Markdown"
         }
-        requests.post(f"{TELEGRAM_API_URL}/sendMessage", json=payload)
+        requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage", json=payload)
             
     return {"status": "ok"}
