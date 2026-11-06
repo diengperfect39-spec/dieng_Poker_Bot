@@ -5,8 +5,8 @@ from fastapi import FastAPI, Request
 
 app = FastAPI()
 
-TOKEN = "9204768032:AAGhyVmAdpbtJtk91-BLsCt7UHeZTPrEmGk"
-RENDER_URL = "dieng-poker-bot.onrender.com"  # Mets bien ton nom de domaine Render exact ici
+TOKEN = "9204768032:AAGdCe7c_tym2R6zyug8jtx33P9gC4wpZx4"
+RENDER_URL = "dieng-poker-bot.onrender.com"  # Ton URL Render exacte
 
 @app.on_event("startup")
 def setup_webhook():
@@ -31,7 +31,7 @@ async def telegram_webhook(request: Request):
         j1, j2 = random.sample(joueurs, 2)
         
         confiance = random.randint(84, 96)
-        issue = random.choice([f"Victoire net de je {j1}", f"Victoire serrée de {j2}", "Value / Partage technique"])
+        issue = random.choice([f"Victoire nette de {j1}", f"Victoire serrée de {j2}", "Value / Partage technique"])
         
         analysis_text = (
             f"♠️ **DIENG POKER ANALYTICS VIP** ♠️\n\n"
