@@ -4,17 +4,15 @@ import requests
 from datetime import datetime
 from fastapi import FastAPI, Request
 
-# ⚠️ Mets ici le token exact de ton bot DIENG-POKER-VIP récupéré sur BotFather
-TOKEN = "TON_TOKEN_BOT_POKER_ICI"
+TOKEN = "9204768032:AAGdCe7c_tym2R6zyug8jtx33P9gC4wpZx4"
 URL = f"https://api.telegram.org/bot{TOKEN}"
-# ⚠️ Mets ici l'URL exacte de ton service Render dédié au Poker
-RENDER_URL = "https://nom-de-ton-service-poker.onrender.com"
+RENDER_URL = "https://dieng-poker-bot.onrender.com" # Assure-toi que c'est bien l'URL exacte de ton service Render Poker
 
 app = FastAPI()
 
 @app.get("/")
 def home():
-    return {"status": "Dieng Poker VIP Actif"}
+    return {"status": "Dieng Poker VIP Pro Actif"}
 
 @app.post(f"/{TOKEN}")
 async def webhook(req: Request):
@@ -28,7 +26,6 @@ async def webhook(req: Request):
             session_id = txt
             h = int(hashlib.md5(session_id.encode()).hexdigest(), 16)
             
-            # Analyse probabiliste et logique spécifique au Poker / TVBet
             options = ["Une Paire (Cote : 2.56)", "Double Paire (Cote : 4.20)", "Brelan (Cote : 7.50)", "Carte Haute / Flush (Cote : 3.10)"]
             chosen_option = options[h % len(options)]
             
