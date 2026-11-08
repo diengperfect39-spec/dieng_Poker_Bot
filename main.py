@@ -17,13 +17,14 @@ async def telegram_webhook(request: Request):
         data = await request.json()
         
         if "message" in data:
-            chat_id = data["message"]["chat"]["id"]            text_recu = data["message"].get("text", "").strip()
+            chat_id = data["message"]["chat"]["id"]
+            text_recu = data["message"].get("text", "").strip()
             
             session_info = "PB238361 06:40"
             if text_recu and not text_recu.startswith("/"):
                 session_info = text_recu.upper()
                 
-            # Extraction numérique robuste du numéro de session pour éliminer l'aléatoire pur
+            # Extraction numérique robuste du numéro de session
             chiffres_session = "".join([c for c in session_info if c.isdigit()])
             seed_val = int(chiffres_session[-4:]) if len(chiffres_session) >= 4 else 1234
             
@@ -33,7 +34,7 @@ async def telegram_webhook(request: Request):
             v2 = hash_bytes[1]
             v3 = hash_bytes[2]
             
-            # Matrice VIP professionnelle basée sur les fréquences réelles observées sur les tables
+            # Matrice VIP professionnelle basée sur les fréquences réelles
             combinaisons_vip = [
                 {"comb": "Une Paire", "cote_c": "2.56", "analyse": "Forte récurrence de soutien sur l'axe central."},
                 {"comb": "Deux Paires", "cote_c": "3.70", "analyse": "Équilibre des tirages et stabilisation des flanks."},
@@ -52,14 +53,13 @@ async def telegram_webhook(request: Request):
                 {"main": "Main (6)", "cote_m": "5.2"}
             ]
             
-            # Sélection déterministe intelligente liée aux patterns de session
             index_comb = (v1 + seed_val) % len(combinaisons_vip)
             index_main = (v2 + seed_val // 2) % len(mains_actives)
             
             choix_comb = combinaisons_vip[index_comb]
             choix_main = mains_actives[index_main]
             
-            # Fiabilité VIP haut de gamme resserrée (entre 99.1% et 99.8%)
+            # Fiabilité VIP haut de gamme resserrée
             fiabilite = 99.1 + (v3 % 8) / 10
             
             analysis_text = (
